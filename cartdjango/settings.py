@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'shop'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,6 +58,9 @@ WSGI_APPLICATION = 'cartdjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+#DATABASES['default'] =  dj_database_url.config()
+print os.environ.get('DATABASE_URL')
+print dj_database_url.config('DATABASE_URL')
 DATABASES = {'default': dj_database_url.config()}
 
 # Internationalization
