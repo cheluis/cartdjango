@@ -38,8 +38,8 @@ class Publication(models.Model):
 	publication_types = models.ManyToManyField(PublicationType)
 	categories = models.ManyToManyField(Category)
 	author = models.CharField(max_length = 255)
-	pdf_file = models.FileField(null = True) 
-	audio_file = models.FileField(null = True)
+	pdf_file = models.FileField(null = True, blank = True) 
+	audio_file = models.FileField(null = True, blank = True)
 	
 	class Meta:
 		verbose_name = "Publication"
