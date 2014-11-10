@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ publication.name}}</h1>
+
+<p>{{ publication.author }}</p>
+
+{% if user.is_authenticated %}
+<div class="row">
+	<div class="col-lg-6">
+		<form class="form-inline" method="post" action="#">
+			{% csrf_token %}
+			<div class="form-group">
+				<label class="sr-only" for="quantity">Quantity</label>
+				<input type="text" class="form-control" id="quantity" placeholder="Quantity">
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="presentation">Presentation</label>
+				<select class="form-control">
+					<option>Presentation</option>
+					{% for pub_type in pub_types %}
+					<option id="{{ pub_type.id }}">{{ pub_type.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<button type="submit" class="btn">Order</button>
+		</form>
+	</div>
+</div>
+<div class="row">
+	{% include "publication/_publications-related.html" %}
+</div>
+{% endif %}
+{% endblock %}

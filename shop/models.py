@@ -60,7 +60,7 @@ class Order(models.Model):
 		verbose_name_plural = "Orders"
 	
 	def __unicode__(self):
-		pass
+		return self.user.username
     
 class OrderDetail(models.Model):
 	order = models.ForeignKey(Order)

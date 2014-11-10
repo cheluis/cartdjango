@@ -12,8 +12,9 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required
-from shop.models import Category, Publication
+from shop.models import Category, Publication, Order
 
 
 # Create your views here.
@@ -53,4 +54,38 @@ class Index(TemplateView):
         publications = Publication.objects.order_by('?')[:10]
         context['categories'] = categories
         context['publications'] = publications
+        user_active_order = None
+        if self.request.user.is_authenticated():
+            user_active_order = self.get_user_order()
+        context['order'] = user_active_order
         return context
+
+    def get_user_order(self):
+        user_order = Order.objects.filter(user = self.request.user)
+        if user_order.count() > 0:
+            user_order = user_order.get(order_status = 'A')
+        else:
+            user_order = Order(user = self.request.user)
+            user_order.save()
+        return user_order
+
+
+class PublicationDetail(DetailView):
+    template_name = 'publication/publication-detail.html'
+    model = Publication
+    def get_context_data(self, **kwargs):
+        context = super(PublicationDetail, self).get_context_data(**kwargs)
+        item_pub_types = self.get_item_pub_types()
+        related_items = self.get_related_items()
+        context['pub_types'] = item_pub_types
+        context['related_items'] = related_items
+        return context
+
+    def get_item_pub_types(self):
+        pub_types = self.object.publication_types.all()
+        return pub_types
+
+    def get_related_items(self):
+        item_categories = list(self.object.categories.all())
+        related_items = Publication.objects.filter(categories__in = item_categories)[:5]
+        return related_items

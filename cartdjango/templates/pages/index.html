@@ -2,9 +2,5 @@
 
 {% block content %}
 
-<ul>
-	{% for publication in publications %}
-	<li>{{ publication.name }}</li>
-	{% endfor %}
-</ul>
+{% include "publication/publication-list.html" %}
 {% endblock %}
