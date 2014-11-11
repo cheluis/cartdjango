@@ -4,17 +4,21 @@ import json
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect, QueryDict, HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 from django.utils.http import base36_to_int
 from django.utils.translation import ugettext as _
 from django.views import generic
+from django.views.generic import View
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic.base import TemplateView
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView, SingleObjectMixin
+from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
-from shop.models import Category, Publication, Order
+from shop.models import Category, Publication, Order, OrderDetail, PublicationType
+from shop.forms import ProcessOrderForm
 
 
 # Create your views here.
@@ -46,7 +50,17 @@ class LoginRequiredMixin(object):
     def dispatch(self, *args, **kwargs):
         return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
-class Index(TemplateView):
+class ActiveUserOrder(View):
+    def get_user_order(self):
+        user_order = Order.objects.filter(user = self.request.user)
+        if user_order.count() > 0:
+            user_order = user_order.get(order_status = 'A')
+        else:
+            user_order = Order(user = self.request.user)
+            user_order.save()
+        return user_order
+
+class Index(TemplateView, ActiveUserOrder):
     template_name = 'pages/index.html'
     def get_context_data(self, **kwargs):
         context = super(Index, self).get_context_data(**kwargs)
@@ -60,17 +74,9 @@ class Index(TemplateView):
         context['order'] = user_active_order
         return context
 
-    def get_user_order(self):
-        user_order = Order.objects.filter(user = self.request.user)
-        if user_order.count() > 0:
-            user_order = user_order.get(order_status = 'A')
-        else:
-            user_order = Order(user = self.request.user)
-            user_order.save()
-        return user_order
+    
 
-
-class PublicationDetail(DetailView):
+class PublicationDetail(DetailView, ActiveUserOrder):
     template_name = 'publication/publication-detail.html'
     model = Publication
     def get_context_data(self, **kwargs):
@@ -78,7 +84,11 @@ class PublicationDetail(DetailView):
         item_pub_types = self.get_item_pub_types()
         related_items = self.get_related_items()
         context['pub_types'] = item_pub_types
-        context['related_items'] = related_items
+        context['publications'] = related_items
+        user_active_order = None
+        if self.request.user.is_authenticated():
+            user_active_order = self.get_user_order()
+        context['order'] = user_active_order
         return context
 
     def get_item_pub_types(self):
@@ -87,5 +97,39 @@ class PublicationDetail(DetailView):
 
     def get_related_items(self):
         item_categories = list(self.object.categories.all())
-        related_items = Publication.objects.filter(categories__in = item_categories)[:5]
+        related_items = Publication.objects.filter(categories__in = item_categories).exclude(id = self.object.id)[:5]
         return related_items
+
+class OrderAddDetail(UpdateView):
+    model = Order
+    
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
+        publication_id = self.request.POST['publication_id']
+        publication = Publication.objects.get(pk = publication_id)
+        qty = self.request.POST['quantity']
+        pub_type_id = self.request.POST['type']
+        pub_type = PublicationType.objects.get(pk = pub_type_id)
+        order_detail = OrderDetail(order = order, order_item = publication, order_quantity = qty, order_presentation = pub_type)
+        order_detail.save()
+        return HttpResponseRedirect(reverse('order_detail', kwargs={'pk': order.id}))
+
+class OrderDetailView(UpdateView):
+    model = Order
+    template_name = 'order/order-detail.html'
+    form_class = ProcessOrderForm
+
+    def get_context_data(self, **kwargs):
+        context = super(OrderDetailView, self).get_context_data(**kwargs)
+        order_items = OrderDetail.objects.filter(order = self.object)
+        context['order_items'] = order_items
+        context['order_total'] = self.get_order_total(order_items)
+        return context
+    """
+    This should be as a model method or in a model manager
+    """
+    def get_order_total(self, order_detail):
+        total = 0
+        for item in order_detail:
+            total = total + (item.order_quantity * item.order_item.price)
+        return total

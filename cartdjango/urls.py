@@ -12,6 +12,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/$', views.Index.as_view(), name="index"),
     url(r'^publication/(?P<pk>\d+)/$', views.PublicationDetail.as_view(), name="pub_detail"),
+    url(r'^order/(?P<pk>\d+)/$', views.OrderAddDetail.as_view(), name="order_update"),
+    url(r'^order-detail/(?P<pk>\d+)/$', views.OrderDetailView.as_view(), name="order_detail"),
 
 ) 
 

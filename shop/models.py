@@ -12,7 +12,7 @@ class PaymentMethod(models.Model):
         verbose_name_plural = "PaymentMethods"
 
     def __unicode__(self):
-        pass
+    	return self.name
 
 class Category(models.Model):
 	name = models.CharField(max_length = 150)
@@ -38,7 +38,7 @@ class Publication(models.Model):
 	publication_types = models.ManyToManyField(PublicationType)
 	categories = models.ManyToManyField(Category)
 	author = models.CharField(max_length = 255)
-	price = models.FloatField(default = 0, null = True, blank = True)
+	price = models.DecimalField(default = 0, null = True, blank = True, max_digits = 10, decimal_places = 2)
 	thumbnail = models.ImageField(upload_to = 'thumbnails', default = '')
 	pdf_file = models.FileField(null = True, blank = True) 
 	audio_file = models.FileField(null = True, blank = True)
@@ -56,7 +56,7 @@ class Order(models.Model):
 	order_status = models.CharField(max_length = 1, choices = ORDER_STATUS, default = 'A')
 	order_address = models.TextField(null = True, blank = True)
 	order_payment_method = models.ForeignKey(PaymentMethod, null = True)
-
+	order_payment_number = models.CharField(max_length = 20, null = True, blank = True)
 	class Meta:
 		verbose_name = "Order"
 		verbose_name_plural = "Orders"
@@ -67,4 +67,5 @@ class Order(models.Model):
 class OrderDetail(models.Model):
 	order = models.ForeignKey(Order)
 	order_item = models.ForeignKey(Publication)
-	order_quantity = models.IntegerField()    
+	order_quantity = models.IntegerField()
+	order_presentation = models.ForeignKey(PublicationType, null = True, blank = True)    

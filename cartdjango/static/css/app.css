@@ -1,6 +1,15 @@
 body {
   padding-top: 50px;
 }
+
+
+.pub-images {
+  width: 450px;
+  height: 450px;
+  overflow: hidden;
+  position: relative;
+  float: left;
+}
 .main {
   padding: 20px;
 }

@@ -1,0 +1,10 @@
+<ul class="publications">
+	{% for publication in publications %}
+	<li class="thumbnail pub-listing">
+		<a href="{% url 'pub_detail' publication.id %}" class="thumb"><img src="{{ MEDIA_URL }}{{ publication.thumbnail }}"></a>
+		<a href="{% url 'pub_detail' publication.id %}">{{ publication.name }}</a>
+		<p>{{ publication.author }}</p>
+		<p>{{ publication.date_published}}</p>
+	</li>
+	{% endfor %}
+</ul>

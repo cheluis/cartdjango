@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>Order Detail</h1>
+
+{% if user.is_authenticated %}
+<div class="row">
+	
+	<div class="col-md-10">
+		<ul>
+		{% for item in order_items %}
+		<li>{{item.order_item.name}} &nbsp; {{ item.order_presentation.name }}&nbsp; {{ item.order_quantity }}</li>
+		{% endfor %}
+		</ul>
+		<p>Total:&nbsp;<b>{{ order_total }}</b></p>
+	</div>
+	<div class="col-md-2">
+		<button type="button" class="btn btn-primary" id="btn_process_order">Checkout Order</button>
+	</div>
+</div>
+<div class="row" id="div_frm_process_order" style="display:none;">
+	<h3>Address and Payment Method</h3>
+	<form role="form" method="post" action=".">
+	  	{{ form|crispy }}
+    	{% csrf_token %}
+	  	<button type="submit" class="btn btn-default">Submit</button>
+	</form>
+	</div>
+{% endif %}
+
+
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  
+	<script type="text/javascript">
+		$('#btn_process_order').click(function(){
+			$('#div_frm_process_order').show();
+		});
+	</script>
+{% endblock javascript %}

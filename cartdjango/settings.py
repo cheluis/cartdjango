@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'shop'
 )
 
@@ -52,6 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 ROOT_URLCONF = 'cartdjango.urls'
 
 WSGI_APPLICATION = 'cartdjango.wsgi.application'

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="pub-images">
+  <img src="{{ MEDIA_URL }}{{ publication.thumbnail }}" class="active">
+</div>
 <h1>{{ publication.name}}</h1>
 
 <p>{{ publication.author }}</p>
@@ -8,21 +11,22 @@
 {% if user.is_authenticated %}
 <div class="row">
 	<div class="col-lg-6">
-		<form class="form-inline" method="post" action="#">
+		<form class="form-inline" method="post" action="{% url 'order_update' order.id %}">
 			{% csrf_token %}
 			<div class="form-group">
 				<label class="sr-only" for="quantity">Quantity</label>
-				<input type="text" class="form-control" id="quantity" placeholder="Quantity">
+				<input type="text" class="form-control" name="quantity" placeholder="Quantity">
 			</div>
 			<div class="form-group">
 				<label class="sr-only" for="presentation">Presentation</label>
-				<select class="form-control">
+				<select class="form-control" name="type">
 					<option>Presentation</option>
 					{% for pub_type in pub_types %}
-					<option id="{{ pub_type.id }}">{{ pub_type.name }}</option>
+					<option value="{{ pub_type.id }}">{{ pub_type.name }}</option>
 					{% endfor %}
 				</select>
 			</div>
+			<input type="hidden" name="publication_id" value="{{ publication.id }}"/>
 			<button type="submit" class="btn">Order</button>
 		</form>
 	</div>

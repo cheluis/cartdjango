@@ -1,7 +1,7 @@
 <ul class="pub-thumbs">
-  {% for item in related_items %}
+  {% for item in publications %}
   <li >
-    {{ item.name }}
+    <a href="{% url 'pub_detail' item.id %}" class="thumb"><img src="{{ MEDIA_URL }}{{ item.thumbnail }}"></a>
   </li>
   {% endfor %}
 </ul>
