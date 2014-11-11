@@ -38,6 +38,8 @@ class Publication(models.Model):
 	publication_types = models.ManyToManyField(PublicationType)
 	categories = models.ManyToManyField(Category)
 	author = models.CharField(max_length = 255)
+	price = models.FloatField(default = 0, null = True, blank = True)
+	thumbnail = models.ImageField(upload_to = 'thumbnails', default = '')
 	pdf_file = models.FileField(null = True, blank = True) 
 	audio_file = models.FileField(null = True, blank = True)
 	
