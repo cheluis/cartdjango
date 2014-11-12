@@ -21,6 +21,7 @@ from shop.models import Category, Publication, Order, OrderDetail, PublicationTy
 from shop.forms import ProcessOrderForm, OrderDetailForm
 import os
 from django.utils import encoding
+from django.core.mail import send_mail
 
 # Create your views here.
 class AjaxMixin(object):
@@ -60,7 +61,9 @@ class ActiveUserOrderMixin(View):
         if not user_order:
             user_order = Order(user = self.request.user)
             user_order.save()
-        return user_order[0]
+            return user_order
+        else:
+            return user_order[0]
 
 class Index(ListView, ActiveUserOrderMixin):
     """
@@ -147,6 +150,8 @@ class OrderDetailView(UpdateView, LoginRequiredMixin):
         order.order_payment_number = self.request.POST['order_payment_number']
         order.order_status = 'P'
         order.save()
+        #errors with the auth 
+        #self.send_mail()
         return HttpResponseRedirect(reverse('order_detail', kwargs={'pk': order.id}))
     """
     This should be as a model method or in a model manager
@@ -156,6 +161,9 @@ class OrderDetailView(UpdateView, LoginRequiredMixin):
         for item in order_detail:
             total = total + (item.order_quantity * item.order_item.price)
         return total
+    
+    def send_mail(self):
+        send_mail('Django Cart', 'Your order number %s has been comoppleted ' % (self.get_object().id) , 'djangosh@example.com', [self.request.user.email], fail_silently=False)
 
 class DownloadFileView(View, LoginRequiredMixin):
 

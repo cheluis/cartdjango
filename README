@@ -1,6 +1,10 @@
 Application to shop publications. It has some designs flaws (publication and its files should be normalized),
 and some architecturals errors too that I plan to fix. Also, gonna try to push to some PaaS service.
 
+The verification email wasn't implemented due problems with the authentication system. Given the time I 
+decided not to implement it. 
+
+I didn't used any frontend framework, just a little bit of jquery, It wasn't necessary in my opinion.
 Steps to run locally:
 
 1.- clone
