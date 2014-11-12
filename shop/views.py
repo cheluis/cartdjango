@@ -17,8 +17,8 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
-from shop.models import Category, Publication, Order, OrderDetail, PublicationType
-from shop.forms import ProcessOrderForm
+from shop.models import Category, Publication, Order, OrderDetail, PublicationType, PaymentMethod
+from shop.forms import ProcessOrderForm, OrderDetailForm
 
 
 # Create your views here.
@@ -81,14 +81,15 @@ class PublicationDetail(DetailView, ActiveUserOrder):
     model = Publication
     def get_context_data(self, **kwargs):
         context = super(PublicationDetail, self).get_context_data(**kwargs)
-        item_pub_types = self.get_item_pub_types()
         related_items = self.get_related_items()
-        context['pub_types'] = item_pub_types
         context['publications'] = related_items
         user_active_order = None
         if self.request.user.is_authenticated():
             user_active_order = self.get_user_order()
         context['order'] = user_active_order
+        form = OrderDetailForm()
+        form.fields['order_presentation'].queryset = self.get_item_pub_types()
+        context['form'] = form
         return context
 
     def get_item_pub_types(self):
@@ -107,8 +108,8 @@ class OrderAddDetail(UpdateView):
         order = self.get_object()
         publication_id = self.request.POST['publication_id']
         publication = Publication.objects.get(pk = publication_id)
-        qty = self.request.POST['quantity']
-        pub_type_id = self.request.POST['type']
+        qty = self.request.POST['order_quantity']
+        pub_type_id = self.request.POST['order_presentation']
         pub_type = PublicationType.objects.get(pk = pub_type_id)
         order_detail = OrderDetail(order = order, order_item = publication, order_quantity = qty, order_presentation = pub_type)
         order_detail.save()
@@ -125,6 +126,15 @@ class OrderDetailView(UpdateView):
         context['order_items'] = order_items
         context['order_total'] = self.get_order_total(order_items)
         return context
+
+    def post(self, request, *args, **kwargs):
+        order = self.get_object()
+        order.order_address = self.request.POST['order_address']
+        order.order_payment_method = PaymentMethod.objects.get(pk = self.request.POST['order_payment_method'])
+        order.order_payment_number = self.request.POST['order_payment_number']
+        order.order_status = 'P'
+        order.save()
+        return HttpResponseRedirect(reverse('order_detail', kwargs={'pk': order.id}))
     """
     This should be as a model method or in a model manager
     """

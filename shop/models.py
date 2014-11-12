@@ -25,10 +25,11 @@ class Category(models.Model):
 
 class PublicationType(models.Model):
 	name = models.CharField(max_length = 15)
+	downloadable = models.BooleanField(default = False)
 
 	class Meta:
-		verbose_name = "PublicationType"
-		verbose_name_plural = "PublicationTypes"
+		verbose_name = "Publication Type"
+		verbose_name_plural = "Publication Types"
 	def __unicode__(self):
 		return self.name
 
