@@ -1,0 +1,10 @@
+steps:
+
+1.- clone
+2.- virtualenv venv
+3.- source venv/bin/activate
+4.- pip install -r > requirements.txt
+5.- export DATABASE_URL=postgres://user:@host:port/database (must be created)
+6.- manage.py syncdb
+7.- manage.py migrate
+8.- manage.py loaddata fixture.json

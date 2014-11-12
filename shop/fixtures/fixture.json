@@ -1,0 +1,52 @@
+[
+  {
+    "model": "shop.category",
+    "pk": 1,
+    "fields": {
+      "name": "Computer Science"
+    }
+  },
+  {
+    "model": "shop.category",
+    "pk": 2,
+    "fields": {
+      "name": "Chemistry"
+    }
+  },
+  {
+    "model": "shop.paymentmethod",
+    "pk": 1,
+    "fields": {
+      "name": "Visa"
+    }
+  },
+  {
+    "model": "shop.paymentmethod",
+    "pk": 2,
+    "fields": {
+      "name": "Mastercard"
+    }
+  },
+  {
+    "model": "shop.publicationtype",
+    "pk": 1,
+    "fields": {
+      "name": "PDF"
+    }
+  },
+  {
+    "model": "shop.publicationtype",
+    "pk": 2,
+    "fields": {
+      "name": "Hardcover"
+    }
+  },
+  {
+    "model": "shop.publicationtype",
+    "pk": 3,
+    "fields": {
+      "name": "Sound"
+    }
+  }
+
+]
