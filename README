@@ -1,4 +1,7 @@
-steps:
+Application to shop publications. It has some designs flaws (publication and its files should be normalized),
+and some architecturals errors too that I plan to fix. Also, gonna try to push to some PaaS service.
+
+Steps to run locally:
 
 1.- clone
 2.- virtualenv venv
