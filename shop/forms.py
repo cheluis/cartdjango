@@ -11,5 +11,5 @@ class ProcessOrderForm(forms.ModelForm):
 		exclude = ['user', 'order_date', 'order_status']
 
 class OrderDetailForm(forms.Form):
-	order_quantity = forms.IntegerField(label = 'Quantity')
-	order_presentation = forms.ModelChoiceField(queryset = None, empty_label = 'Select One', label = 'Payment Method' )
+	order_quantity = forms.IntegerField(label = 'Quantity', min_value=1)
+	order_presentation = forms.ModelChoiceField(queryset = None, empty_label = 'Select One', label = 'Product Presentation' )

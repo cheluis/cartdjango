@@ -7,22 +7,14 @@
 <div class="row">
 	
 	<div class="col-md-10">
-		<ul>
-		{% for item in order_items %}
-		<li>
-			<b>{{item.order_item.name}}<b> 
-			<p>{{ item.order_presentation.name }}&nbsp; {{ item.order_quantity }}</p>
-			{% if order.order_status == "P" and item.order_presentation.downloadable %}
-			<a href="">Download</a>
-			{% endif %}
-		</li>
-		{% endfor %}
-		</ul>
+		{% include "order/_order-detail-items.html" %}
 		<p>Total:&nbsp;<b>{{ order_total }}</b></p>
 	</div>
+	{% if order.order_status == "A" %}
 	<div class="col-md-2">
 		<button type="button" class="btn btn-primary" id="btn_process_order">Checkout Order</button>
 	</div>
+	{% endif %}
 </div>
 <div class="row" id="div_frm_process_order" style="display:none;">
 	<h3>Address and Payment Method</h3>

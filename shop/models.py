@@ -8,8 +8,8 @@ ORDER_STATUS = (('A', 'ACTIVE'), ('P', 'PROCESSED'), ('D', 'DOWNLOADED'))
 class PaymentMethod(models.Model):
     name = models.CharField(max_length = 150)
     class Meta:
-        verbose_name = "PaymentMethod"
-        verbose_name_plural = "PaymentMethods"
+        verbose_name = "Payment Method"
+        verbose_name_plural = "Payment Methods"
 
     def __unicode__(self):
     	return self.name
@@ -41,8 +41,8 @@ class Publication(models.Model):
 	author = models.CharField(max_length = 255)
 	price = models.DecimalField(default = 0, null = True, blank = True, max_digits = 10, decimal_places = 2)
 	thumbnail = models.ImageField(upload_to = 'thumbnails', default = '')
-	pdf_file = models.FileField(null = True, blank = True) 
-	audio_file = models.FileField(null = True, blank = True)
+	pdf_file = models.FileField(upload_to = 'pdf', null = True, blank = True) 
+	audio_file = models.FileField(upload_to = 'sound', null = True, blank = True)
 	
 	class Meta:
 		verbose_name = "Publication"

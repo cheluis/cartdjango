@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^publication/(?P<pk>\d+)/$', views.PublicationDetail.as_view(), name="pub_detail"),
     url(r'^order/(?P<pk>\d+)/$', views.OrderAddDetail.as_view(), name="order_update"),
     url(r'^order-detail/(?P<pk>\d+)/$', views.OrderDetailView.as_view(), name="order_detail"),
+    url(r'^download-file/(?P<order_detail>\d+)/$', views.DownloadFileView.as_view(), name="download_file_order"),
 
 ) 
 

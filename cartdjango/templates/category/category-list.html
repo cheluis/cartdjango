@@ -1,9 +1,8 @@
  <ul class="nav nav-sidebar">
  	{% for category in categories %}
  	<li>
- 		<a href="#">{{ category.name }}</a>
+ 		<a href="{%url 'index' %}?category={{ category.id }}">{{ category.name }}</a>
  	</li>
-
  	{% endfor %}
 
  </ul>

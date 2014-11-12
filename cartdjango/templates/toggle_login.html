@@ -4,7 +4,7 @@
         <a class="dropdown-toggle" id="dropuser" data-toggle="dropdown"
             href="#">{{ user.username }} <b class="caret"></b></a>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropuser">
-            <li><a href="#">My bookmarks</a></li>
+            <li><a href="{% url 'order_detail' order.id%}">My Cart</a></li>
             <li><a href="{% url "mysite_logout" %}">Logout</a></li>
         </ul>
     </li>

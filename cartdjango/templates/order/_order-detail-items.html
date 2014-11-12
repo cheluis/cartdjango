@@ -1,0 +1,11 @@
+<ul>
+	{% for item in order_items %}
+	<li>
+		<h3>{{item.order_item.name}}</h3>
+		<p>{{ item.order_presentation.name }}&nbsp; {{ item.order_quantity }}</p>
+		{% if order.order_status == "P" and item.order_presentation.downloadable %}
+		<a href="{% url 'download_file_order' item.id%}">Download</a>
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
